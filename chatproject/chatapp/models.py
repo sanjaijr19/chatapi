@@ -3,10 +3,6 @@ from django.db import models
 from django.utils import timezone
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
@@ -21,12 +17,13 @@ class Message(models.Model):
         ordering = ('timestamp',)
 
 class GroupChat(models.Model):
-    group_members = models.ForeignKey(User, on_delete=models.CASCADE,related_name='group')
+    group_members = models.OneToOneField(User, on_delete=models.CASCADE,related_name='group',unique=True)
     join_date = models.DateTimeField(auto_now_add=True)
 
     def Join(self):
         self.join_date = timezone.now()
         self.save()
-
+    def __str__(self):
+        return self.group_members
 
 

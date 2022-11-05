@@ -1,9 +1,8 @@
-from rest_framework import serializers
-from .models import UserProfile,Message,GroupChat
+from rest_framework import serializers,validators
+from .models import Message,GroupChat
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-
     class Meta:
         model = User
         fields = ['id', 'username']
@@ -22,4 +21,14 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GroupChat
         fields = ['id','group_members','join_date']
+# Register Serializer
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
+    def create(self, validated_data):
+        user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
+
+        return user
