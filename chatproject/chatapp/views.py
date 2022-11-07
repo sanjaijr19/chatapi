@@ -1,13 +1,13 @@
 from django.contrib.auth.models import User
-from .models import Message,GroupChat
+from .models import Message,GroupMembers,Group_Name
 from .serializers import MessageSerializer, UserSerializer,GroupSerializer,RegisterSerializer
 from rest_framework.response import Response
 from rest_framework import generics,permissions
 from rest_framework.views import APIView
 from rest_framework import viewsets
-from .pagination import Page
-from rest_framework.permissions import IsAdminUser,IsAuthenticated
-from chatapp.permissions import IsOwnerOrReadOnly
+from .pagination import Page,Pages
+from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny,IsAuthenticatedOrReadOnly
+from .permissions import ReadOnly,OwnerOrReadOnly
 from knox.models import AuthToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import login
@@ -20,59 +20,72 @@ from knox.views import LoginView as KnoxLoginView
 class CreateUser(viewsets.ModelViewSet):
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    pagination_class = Page
+    pagination_class = Pages
 
 
 class CreateMessage(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    pagination_class = Page
+    pagination_class = Pages
 
 class GroupMessage(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    queryset = GroupChat.objects.all()
+    permission_classes = [AllowAny]
+    queryset = GroupMembers.objects.all()
     serializer_class = GroupSerializer
-    pagination_class = Page
+    pagination_class = Pages
+
+
+# class Groupname(APIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [AllowAny]
+#     def get(self,request):
+#         user=Group_Name.objects.all()
+#         serializer=GroupnameSerializer(user,many=True)
+#         return Response(serializer.data)
 
 
 
 #update and delete the user, messages,Group
 class Details(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     # permission_classes = [IsOwnerOrReadOnly]
 
 
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
-    # authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
 class GroupDetails(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    queryset = GroupChat.objects.all()
+    permission_classes = [AllowAny]
+    queryset = GroupMembers.objects.all()
     serializer_class = GroupSerializer
 
 
-#View all members in group
-class GroupMembers(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    def get(self,request):
-        user=GroupChat.objects.all()
-        serializer=GroupSerializer(user,many=True)
-        return Response(serializer.data)
 
+
+#View all members in group
+# class GroupMembers(APIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [AllowAny]
+#     def get(self,request):
+#         queryset = GroupMembers.objects.all()
+#         serializer=GroupSerializer(queryset,many=True)
+#         return Response(serializer.data)
+
+
+#Register the New User
 class RegisterAPI(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = RegisterSerializer
@@ -85,6 +98,9 @@ class RegisterAPI(generics.GenericAPIView):
         "token": AuthToken.objects.create(user)[1]
         })
 
+
+
+#Login User
 class LoginAPI(KnoxLoginView):
     permission_classes = (permissions.AllowAny,)
     def post(self, request, format=None):
