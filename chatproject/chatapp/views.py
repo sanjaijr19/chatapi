@@ -20,7 +20,7 @@ from knox.views import LoginView as KnoxLoginView
 class CreateUser(viewsets.ModelViewSet):
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = Pages
@@ -28,14 +28,14 @@ class CreateUser(viewsets.ModelViewSet):
 
 class CreateMessage(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     pagination_class = Pages
 
 class GroupMessage(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
     queryset = GroupMembers.objects.all()
     serializer_class = GroupSerializer
     pagination_class = Pages
@@ -54,7 +54,7 @@ class GroupMessage(viewsets.ModelViewSet):
 #update and delete the user, messages,Group
 class Details(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     # permission_classes = [IsOwnerOrReadOnly]
@@ -62,13 +62,13 @@ class Details(generics.RetrieveUpdateDestroyAPIView):
 
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
 class GroupDetails(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
     queryset = GroupMembers.objects.all()
     serializer_class = GroupSerializer
 
