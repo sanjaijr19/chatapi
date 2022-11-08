@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from .pagination import Page,Pages
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny,IsAuthenticatedOrReadOnly
-from .permissions import ReadOnly,OwnerOrReadOnly,IsPostOwner
+from .permissions import IsPostOwner
 from knox.models import AuthToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import login
