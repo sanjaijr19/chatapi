@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chatapp',
     "rest_framework",
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'knox',
     # 'dj_rest_auth',
     # 'allauth',
