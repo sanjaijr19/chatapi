@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from .pagination import Page,Pages
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny,IsAuthenticatedOrReadOnly
-from .permissions import ReadOnly,OwnerOrReadOnly
+from .permissions import ReadOnly,OwnerOrReadOnly,IsPostOwner
 from knox.models import AuthToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import login
@@ -62,7 +62,7 @@ class Details(generics.RetrieveUpdateDestroyAPIView):
 
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsPostOwner]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
