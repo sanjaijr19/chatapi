@@ -13,7 +13,7 @@ router.register('message',views.CreateMessage,basename='CreateMessage')
 router.register('groupchat',views.GroupChat,basename='Groupname')
 
 urlpatterns = [
-    path('create/', views.MessageCreate.as_view(), name='create'),
+    # path('create/', views.MessageCreate.as_view(), name='create'),
     path('user/<int:pk>/', views.UserDetails.as_view(), name='detail'),
     path('msg/<int:pk>', views.MessageDetails.as_view(), name='Messagedetails'),
     path('grp/<int:pk>', views.GroupDetails.as_view(), name='groupdetails'),

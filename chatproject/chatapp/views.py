@@ -15,14 +15,14 @@ from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 
-
-class MessageCreate(mixins.CreateModelMixin,generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-
-    def post(self,request,*args,**kwargs):
-        return self.create(request,*args,**kwargs)
+#
+# class MessageCreate(mixins.CreateModelMixin,generics.GenericAPIView):
+#     permission_classes = [IsAuthenticated]
+#     queryset = Message.objects.all()
+#     serializer_class = MessageSerializer
+#
+#     def post(self,request,*args,**kwargs):
+#         return self.create(request,*args,**kwargs)
 #Create user,messages,Group
 class CreateUser(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
@@ -39,6 +39,8 @@ class CreateMessage(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     pagination_class = Pages
 
+
+
 # class GroupMessage(viewsets.ModelViewSet):
 #     authentication_classes = [JWTAuthentication]
 #     permission_classes = [AllowAny]
@@ -51,7 +53,7 @@ class GroupChat(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
     queryset = GroupDetails.objects.all()
     serializer_class = GroupnameSerializer
-    pagination_class = Page
+    pagination_class = Pages
 
 # class Groupname(APIView):
 #     authentication_classes = [JWTAuthentication]
@@ -125,3 +127,4 @@ class RegisterAPI(generics.GenericAPIView):
 #         user = serializer.validated_data['user']
 #         login(request, user)
 #         return super(LoginAPI, self).post(request, format=None)
+
