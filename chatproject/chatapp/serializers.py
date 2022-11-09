@@ -18,6 +18,12 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = GroupName
         fields = ['id', 'name']
 
+    # def create(self, validated_data):
+    #     group = GroupName.objects.create_user(validated_data['name'])
+    #     return group
+
+
+
     def validate(self, attrs):
         if GroupName.objects.filter(name=attrs['name']).exists():
             raise serializers.ValidationError('group already exists')
@@ -30,6 +36,10 @@ class GroupnameSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GroupDetails
         fields = ['group_name','members','date']
+
+    # def create(self):
+    #     groups = GroupDetails.objects.create()
+    #     return groups
 
 
 
