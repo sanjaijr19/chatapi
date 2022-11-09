@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from .models import Message,GroupDetails
-from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer
+from .models import Message,GroupDetails,GroupName
+from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer
 from rest_framework.response import Response
 from rest_framework import generics,permissions,mixins
 from rest_framework.views import APIView
@@ -54,7 +54,12 @@ class GroupChat(viewsets.ModelViewSet):
     queryset = GroupDetails.objects.all()
     serializer_class = GroupnameSerializer
     pagination_class = Pages
-
+class CreateGroup(viewsets.ModelViewSet):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
+    queryset = GroupName.objects.all()
+    serializer_class = GroupSerializer
+    pagination_class = Pages
 # class Groupname(APIView):
 #     authentication_classes = [JWTAuthentication]
 #     permission_classes = [AllowAny]
