@@ -8,15 +8,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 
 router = DefaultRouter()
 router.register('user/',views.CreateUser,basename='CreateUser')
-router.register('message',views.CreateMessage,basename='CreateMessage')
+router.register('message/',views.CreateMessage,basename='CreateMessage')
 # router.register('group',views.GroupMessage,basename='GroupMessage')
-router.register('groupchat',views.GroupChat,basename='Groupname')
+router.register('groupchat/',views.GroupChat,basename='Groupname')
 
 urlpatterns = [
     # path('create/', views.MessageCreate.as_view(), name='create'),
     path('user/<int:pk>/', views.UserDetails.as_view(), name='detail'),
-    path('msg/<int:pk>', views.MessageDetails.as_view(), name='Messagedetails'),
-    path('grp/<int:pk>', views.GroupDetails.as_view(), name='groupdetails'),
+    path('msg/<int:pk>/', views.MessageDetails.as_view(), name='Messagedetails'),
+    path('grp/<int:pk>/', views.GroupDetails.as_view(), name='groupdetails'),
     # path('grpchat/<int:pk>', views.GroupChatDetails.as_view(), name='groupdet'),
     path('register/', RegisterAPI.as_view(), name='register'),
     path('login/',TokenObtainPairView.as_view(),name='tokenobtain'),
