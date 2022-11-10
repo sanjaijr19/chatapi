@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # 'allauth.account',
     'dj_rest_auth.registration',
     'rest_framework_simplejwt',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

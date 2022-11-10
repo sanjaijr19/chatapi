@@ -14,9 +14,11 @@ from django.contrib.auth import login
 from rest_framework import permissions
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
-
-#
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters     
 # class MessageCreate(mixins.CreateModelMixin,generics.GenericAPIView):
+
 #     permission_classes = [IsAuthenticated]
 #     queryset = Message.objects.all()
 #     serializer_class = MessageSerializer
@@ -25,19 +27,25 @@ from knox.views import LoginView as KnoxLoginView
 #         return self.create(request,*args,**kwargs)
 #Create user,messages,Group
 class CreateUser(viewsets.ModelViewSet):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = Pages
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filterset_fields = ['username','email']
+    search_fields = ['username','email']
+    ordering_fields = ['username','email']
 
 
 class CreateMessage(viewsets.ModelViewSet):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     pagination_class = Pages
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filterset_fields = ['sender','receiver','message']
+    search_fields = ['sender','receiver','message']
+    ordering_fields = ['sender','receiver','message']
 
 
 
@@ -49,13 +57,11 @@ class CreateMessage(viewsets.ModelViewSet):
 #     pagination_class = Pages
 
 class GroupChat(viewsets.ModelViewSet):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     queryset = GroupDetails.objects.all()
     serializer_class = GroupnameSerializer
     pagination_class = Pages
 class CreateGroup(viewsets.ModelViewSet):
-    authentication_classes = [JWTAuthentication]
     permission_classes = [AllowAny]
     queryset = GroupName.objects.all()
     serializer_class = GroupSerializer
@@ -72,22 +78,18 @@ class CreateGroup(viewsets.ModelViewSet):
 
 #update and delete the user, messages,Group
 class UserDetails(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     # permission_classes = [IsOwnerOrReadOnly]
 
-
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsPostOwner]
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
 class GroupDetails(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     queryset = GroupDetails.objects.all()
     serializer_class = GroupnameSerializer
 

@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 router = DefaultRouter()
 router.register('user',views.CreateUser,basename='CreateUser')
 router.register('message',views.CreateMessage,basename='CreateMessage')
-router.register('creategroup',views.CreateGroup,basename='createGroup')
+router.register('groupdetails',views.CreateGroup,basename='createGroup')
 router.register('groupchat',views.GroupChat,basename='groupchat')
 
 urlpatterns = [
