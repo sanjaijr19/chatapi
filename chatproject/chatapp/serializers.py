@@ -27,7 +27,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class GroupnameSerializer(serializers.ModelSerializer):
+class GroupnameSerializer(serializers.HyperlinkedModelSerializer):
     group_name = serializers.CharField()
     members = serializers.ListField(child=serializers.CharField())
 
