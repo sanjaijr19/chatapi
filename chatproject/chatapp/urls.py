@@ -14,7 +14,7 @@ router.register('groupchat',views.GroupChat,basename='groupchat')
 
 urlpatterns = [
     # path('create/', views.MessageCreate.as_view(), name='create'),
-    path('user/<int:pk>/', views.UserDetails.as_view(), name='user'),
+    path('user/<int:pk>/', views.UserDetails.as_view(), name='userdetails'),
     path('msg/<int:pk>/', views.MessageDetails.as_view(), name='msg'),
     path('grp/<int:pk>/', views.GroupDetails.as_view(), name='grp'),
     # path('grpchat/<int:pk>', views.GroupChatDetails.as_view(), name='groupdet'),

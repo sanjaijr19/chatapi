@@ -27,24 +27,24 @@ class GroupName(models.Model):
 
 class GroupDetails(models.Model):
     group_name = models.ForeignKey(GroupName,on_delete=models.CASCADE,related_name='groupmembers')
-    members = models.ForeignKey(User, on_delete=models.CASCADE,related_name='members')
+    members = models.ForeignKey(User, on_delete=models.CASCADE,related_name='members',null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         # return str(self.group_name)
-        return "%s %s" % (self.group_name, self.members)
+        return str(self.group_name)
     def Time(self):
         self.date = timezone.now()
         self.save()
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender',db_constraint=False)
-    receiver = models.ForeignKey(GroupDetails, on_delete=models.CASCADE,related_name='receiver',db_constraint=False)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender',db_constraint=False,null=True)
+    receiver = models.ForeignKey(GroupName, on_delete=models.CASCADE,related_name='receiver',db_constraint=False,null=True)
     message = models.CharField(max_length=1200)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "%s %s" % (self.sender, self.receiver)
+        return "%s %s %s" % (self.sender, self.receiver,self.message)
     class Meta:
         ordering = ('timestamp',)
 

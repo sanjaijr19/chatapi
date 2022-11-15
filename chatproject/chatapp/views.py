@@ -88,6 +88,7 @@ class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
+
 class GroupDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
     queryset = GroupDetails.objects.all()
