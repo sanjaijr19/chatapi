@@ -47,6 +47,14 @@ class CreateMessage(viewsets.ModelViewSet):
     search_fields = ['sender','receiver','message']
     ordering_fields = ['sender','receiver','message']
 
+    # def val(self, request, *args, **kwargs):
+    #     members = GroupDetails.objects.filter(members_id=members_id)
+    #     print(members.id)
+    #     group = GroupDetails.objects.filter(group_name_id=group_name_id)
+    #     print(group.id)
+    #     if members.id not in group.id:
+    #         return Response("error")
+
 
 
 # class GroupMessage(viewsets.ModelViewSet):

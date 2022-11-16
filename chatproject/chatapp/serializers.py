@@ -4,23 +4,23 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username','email','password']
 
-    def create(self, validated_data):
-        return User.objects.create(**validated_data)
+    # def create(self, validated_data):
+    #     return User.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        instance.username = validated_data.get('username', instance.username)
-        instance.password = validated_data.get('password', instance.password)
-        instance.email = validated_data.get('email', instance.email)
-        instance.save()
-        return instance
+    # def update(self, instance, validated_data):
+    #     instance.username = validated_data.get('username', instance.username)
+    #     instance.password = validated_data.get('password', instance.password)
+    #     instance.email = validated_data.get('email', instance.email)
+    #     instance.save()
+    #     return instance
 
 
-    def validate(self, attrs):
-        if User.objects.filter(email=attrs['email']).exists():
-            raise serializers.ValidationError('email already exists')
-        return super().validate(attrs)
+    # def validate(self, attrs):
+    #     if User.objects.filter(email=attrs['email']).exists():
+    #         raise serializers.ValidationError('email already exists')
+    #     return super().validate(attrs)
 
 
 class GroupnameSerializer(serializers.HyperlinkedModelSerializer):
@@ -40,8 +40,11 @@ class GroupnameSerializer(serializers.HyperlinkedModelSerializer):
         # print(validated_data["group_name"])
         # print(validated_data["members"])
         group_name,created = GroupName.objects.get_or_create(name=validated_data["group_name"])
+        print(group_name.id)
         for user in validated_data["members"]:
             user = User.objects.get(username=user)
+            print(user.id)
+
             if user:
                 GroupDetails.objects.create(group_name=group_name,members=user)
             else:
@@ -60,6 +63,12 @@ class GroupnameSerializer(serializers.HyperlinkedModelSerializer):
     #     if GroupDetails.objects.filter(members=attrs['members']).exists():
     #         raise serializers.ValidationError('user already in group')
     #     return super().validate(attrs)
+    def validate(self, attrs):
+        member=GroupDetails.objects.filter(members_id=attrs['members'])
+        group=GroupDetails.objects.filter(group_name_id=attrs['group_name_id'])
+        if (member and group).exists():
+            raise serializers.ValidationError('user already in group')
+        return super().validate(attrs)
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     # name = serializers.ListField(child=serializers.CharField())
     # groupmembers = GroupnameSerializer(many=True,read_only=True)
@@ -108,29 +117,43 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Message
         fields = ['sender', 'receiver', 'message', 'timestamp']
-    def create(self, validated_data):
-        return Message.objects.create(**validated_data)
+    # def create(self, validated_data):
+    #     return Message.objects.create(**validated_data)
 
     def create(self, validated_data):
-        receiver = GroupName.objects.get(name=validated_data["receiver"])
+        receiver = GroupDetails.objects.get(group_name_id=validated_data["receiver"])
+        # print(receiver.id)
         message = Message.objects.create(message=validated_data["message"])
+        # print(message.id)
         for user in validated_data["sender"]:
-            user = User.objects.get(id=user)
-            # group = GroupDetails.objects.get(group_name_id=user)
+            user = GroupDetails.objects.get(members_id=user)
+            # print(user.id)
             if user:
                 Message.objects.create(sender=user,receiver=receiver,message=message)
             else:
                 raise serializers.ValidationError("user not in this group")
             return validated_data
+
+    # def validators(self,**kwargs):
+        # members = GroupDetails.objects.filter(members_id=members_id)
+        # print(members.id)
+        # group = GroupDetails.objects.filter(group_name_id=group_name_id)
+        # print(group.id)
+        # if members.id not in group.id:
+        #     raise serializers.ValidationError("not")
+
+
+
+
     # def validate(self, attrs):
     #     group = GroupDetails.objects.filter(group_name_id = attrs["group_name_id"])
     #     users = User.objects.filter(id =attrs["id"])
     #     print(group)
     #     print(users)
 
-        if users not in group:
-            raise serializers.ValidationError("not")
-        return super().validate(attrs)
+        # if users not in group:
+        #     raise serializers.ValidationError("not")
+        # return super().validate(attrs)
 
     # def update(self, instance, validated_data):
     #     instance.sender = validated_data.get('sender', instance.sender)

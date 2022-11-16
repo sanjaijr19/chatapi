@@ -45,11 +45,29 @@ class TestGroup(TestCase):
 class Testuser(TestCase):
     def setUp(self):
         self.client = Client()
-        self.reg_url = reverse('grp',args=[1])
+        self.reg_url = reverse('user',args=[2])
     def test_view_user(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        # self.assertEquals(response.status_code,200)
+        self.assertTrue(response.status_code,200)
 
+class TestGroupView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.reg_url = reverse('user',args=[2])
+    def test_view_groups(self):
+        response = self.client.get(self.reg_url)
+        # self.assertEquals(response.status_code,200)
+        self.assertTrue(response.status_code,200)
+
+class TestMessage(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.reg_url = reverse('user',args=[2])
+    def test_view_message(self):
+        response = self.client.get(self.reg_url)
+        # self.assertEquals(response.status_code,200)
+        self.assertTrue(response.status_code,200)
 
 # class TestUrls(SimpleTestCase):
 #     def test_url(self):
@@ -81,3 +99,14 @@ class Testuser(TestCase):
 #
 #     def testmodels(self):
 #         self.assertEquals(self.create,'project')
+
+
+
+
+class AuthenticationTestCase(TestCase):
+ def setUp(self):
+       User.objects.create(username='testuser')
+
+ def test_user_created(self):
+       user = User.objects.filter(username='testuser')
+       self.assertTrue(user.exists())
