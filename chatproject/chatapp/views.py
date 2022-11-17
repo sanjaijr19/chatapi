@@ -1,19 +1,19 @@
 from django.contrib.auth.models import User
 from .models import Message,GroupDetails,GroupName
-from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer
+from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer,GroupViewSerializer
 from rest_framework.response import Response
 from rest_framework import generics,permissions,mixins
 from rest_framework.views import APIView
-from rest_framework import viewsets
+# from rest_framework import viewsets
 from .pagination import Page,Pages
 from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny,IsAuthenticatedOrReadOnly
-from .permissions import IsPostOwner
-from knox.models import AuthToken
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from django.contrib.auth import login
+# from .permissions import IsPostOwner
+# from knox.models import AuthToken
+# from rest_framework_simplejwt.authentication import JWTAuthentication
+# from django.contrib.auth import login
 from rest_framework import permissions
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.views import LoginView as KnoxLoginView
+# from rest_framework.authtoken.serializers import AuthTokenSerializer
+# from knox.views import LoginView as KnoxLoginView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters     
@@ -82,14 +82,15 @@ class CreateGroup(viewsets.ModelViewSet):
 #         serializer=GroupnameSerializer(user,many=True)
 #         return Response(serializer.data)
 
-
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = GroupDetails.objects.all()
+    serializer_class = GroupViewSerializer
 
 #update and delete the user, messages,Group
 class UserDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # permission_classes = [IsOwnerOrReadOnly]
 
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
@@ -97,10 +98,28 @@ class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
 
 
-class GroupDetails(generics.RetrieveUpdateDestroyAPIView):
+class GroupDetails(generics.RetrieveUpdateDestroyAPIView,generics.ListAPIView):
     permission_classes = [AllowAny]
     queryset = GroupDetails.objects.all()
-    serializer_class = GroupnameSerializer
+    serializer_class = GroupViewSerializer
+    # pagination_class = Pages
+
+
+
+
+
+# class GroupView(APIView):
+#     def get(self,request):
+#         user=GroupDetails.objects.all()
+#         serializer=GroupViewSerializer(user)
+#         return Response(serializer.data)
+# class GroupView(generics.ListAPIView):
+#     queryset =Message.objects.all()
+#     serializer_class = GroupViewSerializer
+#
+#     def get(self,request,*args,**kwargs):
+#         return self.list(request,*args,**kwargs)
+
 
 # class GroupChatDetails(generics.RetrieveUpdateDestroyAPIView):
 #     authentication_classes = [JWTAuthentication]
@@ -131,8 +150,6 @@ class RegisterAPI(generics.GenericAPIView):
         "user": UserSerializer(user, context=self.get_serializer_context()).data,
         # "token": AuthToken.objects.create(user)[1]
         })
-
-
 
 # Login User
 # class LoginAPI(KnoxLoginView):

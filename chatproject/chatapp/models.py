@@ -26,7 +26,7 @@ class GroupName(models.Model):
         return self.name
 
 class GroupDetails(models.Model):
-    group_name = models.ForeignKey(GroupName,on_delete=models.CASCADE,related_name='groupmembers')
+    group_name = models.ForeignKey(GroupName,on_delete=models.CASCADE,related_name='groupmembers',null=True)
     members = models.ForeignKey(User, on_delete=models.CASCADE,related_name='members',null=True)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -39,7 +39,7 @@ class GroupDetails(models.Model):
         self.save()
 
 class Message(models.Model):
-    sender = models.ForeignKey(GroupDetails, on_delete=models.CASCADE, related_name='sender',db_constraint=False,null=True)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender',db_constraint=False,null=True)
     receiver = models.ForeignKey(GroupDetails, on_delete=models.CASCADE,related_name='receiver',db_constraint=False,null=True)
     message = models.CharField(max_length=1200)
     timestamp = models.DateTimeField(auto_now_add=True)
