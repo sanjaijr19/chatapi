@@ -189,18 +189,18 @@ class TestViews(TestSetUp):
         self.assertEqual(res.data['email'],self.user_data['email'])
         self.assertEqual(res.status_code,400)
 
-    # def test_user_login_correctly(self):
-    #     self.client.post(self.register_url, self.user_data, format='json')
-    #     res = self.client.post(self.login_url, self.user_data, format='json')
-    #     # pdb.set_trace()
-    #     self.assertEqual(res.status_code, 200)
-    #
-    # def test_user_verification(self):
-    #     response = self.client.post(self.register_url, self.user_data, format='json')
-    #     email = response.data['email']
-    #     user = User.objects.get(email=email)
-    #     user.is_verified = True
-    #     user.save()
-    #     res = self.client.post(self.login_url, self.user_data, format='json')
-    #     pdb.set_trace()
-    #     self.assertEqual(res.status_code, 200)
+    def test_user_login_correctly(self):
+        self.client.post(self.register_url, self.user_data, format='json')
+        res = self.client.post(self.login_url, self.user_data, format='json')
+        # pdb.set_trace()
+        self.assertEqual(res.status_code, 200)
+
+    def test_user_verification(self):
+        response = self.client.post(self.register_url, self.user_data, format='json')
+        email = response.data['email']
+        user = User.objects.get(email=email)
+        user.is_verified = True
+        user.save()
+        res = self.client.post(self.login_url, self.user_data, format='json')
+        pdb.set_trace()
+        self.assertEqual(res.status_code, 200)
