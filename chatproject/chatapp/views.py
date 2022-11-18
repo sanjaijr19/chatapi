@@ -61,7 +61,7 @@ class GroupNameDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = GroupName.objects.all()
     serializer_class = GroupSerializer
 class GroupDetails(generics.RetrieveUpdateDestroyAPIView,generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     queryset = GroupDetails.objects.all()
     serializer_class = GroupViewSerializer
 
