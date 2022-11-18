@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     # 'dj_rest_auth',
     # 'allauth',
     # 'allauth.account',
-    'dj_rest_auth.registration',
     'rest_framework_simplejwt',
     'django_filters',
     "debug_toolbar",

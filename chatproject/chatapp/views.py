@@ -17,7 +17,7 @@ from rest_framework.renderers import JSONRenderer
 #Create user,messages,Group
 class CreateUser(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
-    renderer_classes = [JSONRenderer]
+    # renderer_classes = [JSONRenderer]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = Pages
