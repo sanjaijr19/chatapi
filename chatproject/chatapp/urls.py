@@ -19,6 +19,7 @@ urlpatterns = [
     path('user/<int:pk>', views.UserDetails.as_view(), name='user'),
     path('msg/<int:pk>/', views.MessageDetails.as_view(), name='msg'),
     path('grp/<int:pk>/', views.GroupDetails.as_view(), name='grp'),
+    path('grpname/<int:pk>/', views.GroupNameDetails.as_view(), name='grpname'),
     # path('grpchat/<int:pk>', views.GroupChatDetails.as_view(), name='groupdet'),
     # path('grpview/', views.GroupView.as_view(), name='GroupView'),
     path('register/', RegisterAPI.as_view(), name='register'),

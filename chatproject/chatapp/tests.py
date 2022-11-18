@@ -6,53 +6,13 @@ from .views import RegisterAPI,CreateUser,UserDetails,MessageDetails,GroupDetail
 from django.contrib.auth.models import User
 from .models import GroupDetails,GroupName,Message
 
-
-
-
-# class TestUrls(SimpleTestCase):
-#     def test_url(self):
-#         url = reverse("register")
-#         self.assertEquals(resolve(url).func.view_class, RegisterAPI)
-# #
-#     def test_urls(self):
-#         url = reverse("userdetails",args=[1])
-#         self.assertEquals(resolve(url).func.view_class,UserDetails)
-#
-#     def test_url_message(self):
-#         url = reverse("msg", args=[1])
-#         self.assertEquals(resolve(url).func.view_class, MessageDetails)
-#
-#     def test_url_group(self):
-#         url = reverse("grp", args=[1])
-#         self.assertEquals(resolve(url).func.view_class, GroupDetails)
-
-    # def test_url_group(self):
-    #     url = reverse("user")
-    #     self.assertEquals(resolve(url).func.view_class, CreateUser)
-
-#
-# class TestModels(TestCase):
-#     def setUp(self):
-#         self.create = GroupName.objects.create(
-#             name = "project"
-#         )
-#
-#     def testmodels(self):
-#         self.assertEquals(self.create,'project')
-
-# class URLTestcase(TestCase):
-#     def test(self):
-#         client = Client()
-#         User.objects.create_user(username="sanjai",password="sanjai",email="sanjai@gmail.com")
-#         response = client.get(reverse('register'))
-#         self.assertEquals(response.status_code,200)
 class ViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.reg_url = reverse('CreateUser-list')
     def test_view(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 
 class ViewTestmessage(TestCase):
     def setUp(self):
@@ -60,7 +20,7 @@ class ViewTestmessage(TestCase):
         self.reg_url = reverse('CreateMessage-list')
     def test_view_msg(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 
 class ViewTestGroup(TestCase):
     def setUp(self):
@@ -68,7 +28,7 @@ class ViewTestGroup(TestCase):
         self.reg_url = reverse('CreateMessage-list')
     def test_view_grp(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 
 class TestGroup(TestCase):
     def setUp(self):
@@ -76,7 +36,7 @@ class TestGroup(TestCase):
         self.reg_url = reverse('groupchat-list')
     def test_view_group(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 class Testuser(TestCase):
     def setUp(self):
         self.client = Client()
@@ -103,26 +63,6 @@ class TestMessage(TestCase):
         response = self.client.get(self.reg_url)
         # self.assertEquals(response.status_code,200)
         self.assertTrue(response.status_code,200)
-
-
-
-
-
-
-
-
-
-
-class AuthenticationTestCase(TestCase):
- def setUp(self):
-       User.objects.create(username='testuser')
-       User.objects.create(email='testuser@gmail.com')
-
- def test_user_created(self):
-       user = User.objects.filter(username='testuser')
-       email = User.objects.filter(email='testuser@gmail.com')
-       self.assertTrue(user.exists())
-       self.assertTrue(email.exists())
 
 
 class Groupcreation(TestCase):
@@ -163,13 +103,11 @@ class TestSetUp(APITestCase):
     def setUp(self):
         self.register_url = reverse("register")
         self.login_url = reverse('login')
-
         self.user_data = {
             'username' : "sanjai",
-            'email' : 'sanjai@gmail.com',
-            'password' : 'sanjai'
+            'email': "sanjai@gmail.com",
+            'password' : 'sanjai',
         }
-
         return super().setUp()
 
     def tearDown(self):
@@ -181,13 +119,10 @@ class TestViews(TestSetUp):
         res = self.client.post(self.register_url)
         # pdb.set_trace()
         self.assertEquals(res.status_code,400)
-
+    #
     def test_user_register_correctly(self):
-        res = self.client.post(self.register_url,self.user_data, format = 'json')
-        pdb.set_trace()
-        self.assertEqual(res.data['username'],self.user_data['username'])
-        self.assertEqual(res.data['email'],self.user_data['email'])
-        self.assertEqual(res.status_code,400)
+        resp = self.client.post(self.register_url,self.user_data,format="json")
+        self.assertEqual(resp.status_code,200)
 
     def test_user_login_correctly(self):
         self.client.post(self.register_url, self.user_data, format='json')
@@ -195,12 +130,17 @@ class TestViews(TestSetUp):
         # pdb.set_trace()
         self.assertEqual(res.status_code, 200)
 
-    def test_user_verification(self):
-        response = self.client.post(self.register_url, self.user_data, format='json')
-        email = response.data['email']
-        user = User.objects.get(email=email)
-        user.is_verified = True
-        user.save()
-        res = self.client.post(self.login_url, self.user_data, format='json')
-        pdb.set_trace()
-        self.assertEqual(res.status_code, 200)
+
+
+
+class AuthenticationTestCase(TestCase):
+ def setUp(self):
+       User.objects.create(username='testuser')
+       User.objects.create(email='testuser@gmail.com')
+
+ def test_user_created(self):
+       user = User.objects.filter(username='testuser')
+       email = User.objects.filter(email='testuser@gmail.com')
+       self.assertTrue(user.exists())
+       self.assertTrue(email.exists())
+
