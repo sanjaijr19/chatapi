@@ -9,7 +9,6 @@ from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny,IsAu
 from .permissions import IsPostOwner
 from rest_framework import permissions
 from rest_framework import viewsets
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.renderers import JSONRenderer
 
@@ -21,10 +20,6 @@ class CreateUser(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = Pages
-    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
-    filterset_fields = ['username','email']
-    search_fields = ['username','email']
-    ordering_fields = ['username','email']
 
 
 class CreateMessage(viewsets.ModelViewSet):
@@ -32,10 +27,6 @@ class CreateMessage(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     pagination_class = Pages
-    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
-    filterset_fields = ['sender','receiver','message']
-    search_fields = ['sender','receiver','message']
-    ordering_fields = ['sender','receiver','message']
 
 
 class GroupChat(viewsets.ModelViewSet):
