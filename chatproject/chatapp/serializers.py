@@ -145,7 +145,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
+class UserEditSerializer(serializers.HyperlinkedModelSerializer):
 
+
+    class Meta:
+        model = User
+        fields = ['id','username','email']
 
 
 

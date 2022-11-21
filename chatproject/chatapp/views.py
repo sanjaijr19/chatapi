@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from .models import Message,GroupDetails,GroupName
-from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer,GroupViewSerializer,MessageEditSerializer,UserMessageSerializer
+from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer,GroupViewSerializer,MessageEditSerializer,UserMessageSerializer,UserEditSerializer
 from rest_framework.response import Response
 from rest_framework import generics,permissions,mixins
 from rest_framework.views import APIView
@@ -52,7 +52,7 @@ class UserMessages(viewsets.ModelViewSet):
 class UserDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserEditSerializer
 
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsPostOwner]
