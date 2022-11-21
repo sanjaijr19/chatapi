@@ -38,14 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chatapp',
     "rest_framework",
-    # 'rest_framework.authtoken',
-    'knox',
-    # 'dj_rest_auth',
-    # 'allauth',
-    # 'allauth.account',
     'rest_framework_simplejwt',
     'django_filters',
-    "debug_toolbar",
+
 
 ]
 
@@ -59,11 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
-INTERNAL_IPS = [
 
-    "127.0.0.1",
-
-]
 ROOT_URLCONF = 'chatproject.urls'
 
 TEMPLATES = [
@@ -146,10 +137,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES' : [
-        # 'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework.permissions.IsAdminUser',
-        'rest_framework.permissions.AllowAny',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',

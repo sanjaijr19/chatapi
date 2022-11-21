@@ -1,15 +1,14 @@
 from django.contrib.auth.models import User
 from .models import Message,GroupDetails,GroupName
-from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer,GroupViewSerializer
+from .serializers import MessageSerializer, UserSerializer,RegisterSerializer,GroupnameSerializer,GroupSerializer,GroupViewSerializer,MessageEditSerializer,UserMessageSerializer
 from rest_framework.response import Response
 from rest_framework import generics,permissions,mixins
 from rest_framework.views import APIView
 from .pagination import Page,Pages
-from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny,IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser,IsAuthenticated,AllowAny
 from .permissions import IsPostOwner
 from rest_framework import permissions
 from rest_framework import viewsets
-from rest_framework import filters
 from rest_framework.renderers import JSONRenderer
 
 
@@ -30,34 +29,38 @@ class CreateMessage(viewsets.ModelViewSet):
 
 
 class GroupChat(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     queryset = GroupDetails.objects.all()
     serializer_class = GroupnameSerializer
     pagination_class = Pages
 class CreateGroup(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     queryset = GroupName.objects.all()
     serializer_class = GroupSerializer
     pagination_class = Pages
 
-class GroupViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = GroupDetails.objects.all()
-    serializer_class = GroupViewSerializer
+
+
+class UserMessages(viewsets.ModelViewSet):
+    permission_classes = [IsAdminUser]
+    # renderer_classes = [JSONRenderer]
+    queryset = User.objects.all()
+    serializer_class = UserMessageSerializer
+    pagination_class = Pages
 
 #update and delete the user, messages,Group
 class UserDetails(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 class MessageDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsPostOwner]
     queryset = Message.objects.all()
-    serializer_class = MessageSerializer
+    serializer_class = MessageEditSerializer
 
 class GroupNameDetails(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     queryset = GroupName.objects.all()
     serializer_class = GroupSerializer
 class GroupDetails(generics.RetrieveUpdateDestroyAPIView,generics.ListAPIView):

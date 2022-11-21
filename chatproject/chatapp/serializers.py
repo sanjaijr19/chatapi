@@ -29,42 +29,59 @@ class GroupnameSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class GroupViewSerializer(serializers.ModelSerializer):
 
+
+
+
+
+
+
+# Message Serializer
+class MessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = ['sender', 'group', 'message', 'timestamp']
+    def create(self, validated_data):
+        return Message.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.message = validated_data.get('message', instance.message)
+        instance.save()
+        return instance
+
+
+class MessageEditSerializer(serializers.ModelSerializer):
+    sender = serializers.CharField(read_only=True)
+    group = serializers.CharField(read_only=True)
+    class Meta:
+        model = Message
+        fields = ['sender', 'group', 'message', 'timestamp']
+    def create(self, validated_data):
+        return Message.objects.create(**validated_data)
+
+
+class GroupViewSerializer(serializers.ModelSerializer):
+    group_name = serializers.CharField()
+    members = serializers.CharField()
     class Meta:
         model = GroupDetails
         fields = ['id', 'group_name', 'members', 'date']
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    # url = serializers.HyperlinkedIdentityField(view_name="CreateUser")
-    members = GroupnameSerializer(many=True,read_only=True)
-    password = serializers.CharField(write_only=True)
 
+class GroupmemberSerializer(serializers.ModelSerializer):
+    members = serializers.CharField()
     class Meta:
-        model = User
-        fields = ['id','username','email','password','members']
-
-        def create(self, validated_data):
-            return User.objects.create(**validated_data)
-
-        def update(self, instance, validated_data):
-            instance.username = validated_data.get('username', instance.username)
-            instance.password = validated_data.get('password', instance.password)
-            instance.email = validated_data.get('email', instance.email)
-            instance.save()
-            return instance
-
-        def validate(self, attrs):
-            if User.objects.filter(email=attrs['email']).exists():
-                raise serializers.ValidationError('email already exists')
-            return super().validate(attrs)
-
+        model = GroupDetails
+        fields = ['id','members', 'date']
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    groupname = GroupmemberSerializer(many=True,read_only=True)
+    name = serializers.CharField(read_only=True)
 
     class Meta:
         model = GroupName
-        fields = ['id', 'name']
+        fields = ['id', 'name','groupname']
 
     def create(self, validated_data):
         return GroupName.objects.create(**validated_data)
@@ -80,19 +97,36 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError('group already exists')
         return super().validate(attrs)
 
-
-# Message Serializer
-class MessageSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    # url = serializers.HyperlinkedIdentityField(view_name="CreateUser")
+    members = GroupnameSerializer(many=True,read_only=True)
+    password = serializers.CharField(write_only=True)
+    sender = MessageEditSerializer(many=True,read_only=True)
 
     class Meta:
-        model = Message
-        fields = ['sender', 'group', 'message', 'timestamp']
-    def create(self, validated_data):
-        return Message.objects.create(**validated_data)
+        model = User
+        fields = ['id','username','email','password','members','sender']
 
+        def create(self, validated_data):
+            return User.objects.create(**validated_data)
 
+        def update(self, instance, validated_data):
+            instance.username = validated_data.get('username', instance.username)
+            instance.password = validated_data.get('password', instance.password)
+            instance.email = validated_data.get('email', instance.email)
+            instance.save()
+            return instance
 
+        def validate(self, attrs):
+            if User.objects.filter(email=attrs['email']).exists():
+                raise serializers.ValidationError('email already exists')
+            return super().validate(attrs)
+class UserMessageSerializer(serializers.HyperlinkedModelSerializer):
+    sender = MessageEditSerializer(many=True)
 
+    class Meta:
+        model = User
+        fields = ['username','sender']
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -107,6 +141,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=attrs['email']).exists():
             raise serializers.ValidationError('email already exists')
         return super().validate(attrs)
+
+
+
+
 
 
 

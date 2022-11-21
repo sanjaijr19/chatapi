@@ -6,11 +6,11 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,TokenVerifyView
 
 router =routers.DefaultRouter()
-router.register(r'createuser',views.CreateUser,basename='CreateUser')
+router.register(r'userdetails',views.CreateUser,basename='userdetails')
 router.register('message',views.CreateMessage,basename='CreateMessage')
-router.register('groupName',views.CreateGroup,basename='createGroup')
-router.register('groupchat',views.GroupChat,basename='groupchat')
-router.register('groupview',views.GroupViewSet,basename='groupview')
+router.register('Group',views.CreateGroup,basename='createGroup')
+router.register('GroupDetails',views.GroupChat,basename='groupchat')
+router.register('allmessages',views.UserMessages,basename='allmsg')
 
 urlpatterns = [
     path('user/<int:pk>', views.UserDetails.as_view(), name='user'),
@@ -27,7 +27,3 @@ urlpatterns = [
 
 
 
-
-# path('api/login/', LoginAPI.as_view(), name='login'),
-# path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
-# path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall')
