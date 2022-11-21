@@ -83,19 +83,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = GroupName
         fields = ['id', 'name','groupname']
 
-    def create(self, validated_data):
-        return GroupName.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
-
-
-    def validate(self, attrs):
-        if GroupName.objects.filter(name=attrs['name']).exists():
-            raise serializers.ValidationError('group already exists')
-        return super().validate(attrs)
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     # url = serializers.HyperlinkedIdentityField(view_name="CreateUser")

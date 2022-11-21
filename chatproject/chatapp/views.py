@@ -34,7 +34,7 @@ class GroupChat(viewsets.ModelViewSet):
     serializer_class = GroupnameSerializer
     pagination_class = Pages
 class CreateGroup(viewsets.ModelViewSet):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     queryset = GroupName.objects.all()
     serializer_class = GroupSerializer
     pagination_class = Pages
