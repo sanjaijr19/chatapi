@@ -12,7 +12,7 @@ class ViewTest(TestCase):
         self.reg_url = reverse('userdetails-list')
     def test_view(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 
 class ViewTestmessage(TestCase):
     def setUp(self):
@@ -20,7 +20,7 @@ class ViewTestmessage(TestCase):
         self.reg_url = reverse('CreateMessage-list')
     def test_view_msg(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 
 class ViewTestGroup(TestCase):
     def setUp(self):
@@ -28,7 +28,7 @@ class ViewTestGroup(TestCase):
         self.reg_url = reverse('CreateMessage-list')
     def test_view_grp(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 
 class TestGroup(TestCase):
     def setUp(self):
@@ -36,7 +36,7 @@ class TestGroup(TestCase):
         self.reg_url = reverse('groupchat-list')
     def test_view_group(self):
         response = self.client.get(self.reg_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 401)
 class Testuser(TestCase):
     def setUp(self):
         self.client = Client()
@@ -185,12 +185,12 @@ class MessageTestViews(MessageTestSetUp):
     def test_group_add(self):
         res = self.client.get(self.msg_url)
         # pdb.set_trace()
-        self.assertEquals(res.status_code,200)
+        self.assertEquals(res.status_code,401)
 
     def test_group_register_correctly(self):
         resp = self.client.post(self.msg_url,self.msgdata,format="json")
         # pdb.set_trace()
-        self.assertEqual(resp.status_code,201)
+        self.assertEqual(resp.status_code,401)
 
 
 class GroupViewSetUp(APITestCase):
@@ -211,13 +211,13 @@ class UserTestViews(GroupViewSetUp):
     def test_grpview_add(self):
         res = self.client.get(self.grpview_url)
         # pdb.set_trace()
-        self.assertEquals(res.status_code,200)
+        self.assertEquals(res.status_code,401)
 
 
     def test_group_view(self):
         resp = self.client.get(self.grpview_url,self.grpdata,format="json")
         # pdb.set_trace()
-        self.assertEqual(resp.status_code,200)
+        self.assertEqual(resp.status_code,401)
 
 # class GroupChatSetUp(APITestCase):
 #     def setUp(self):
@@ -264,7 +264,7 @@ class UserUpdateViews(UserUpdateSetUp):
     def test_user_add(self):
         res = self.client.patch(self.userupdate_url)
         # pdb.set_trace()
-        self.assertEquals(res.status_code, 200)
+        self.assertEquals(res.status_code, 401)
 
 
 
